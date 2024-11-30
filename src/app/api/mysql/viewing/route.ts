@@ -9,7 +9,7 @@ const connectionParams = {
   database: 'MovieStreamingDB',
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const connection = await mysql.createConnection(connectionParams)
 

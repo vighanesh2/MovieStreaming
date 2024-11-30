@@ -1,15 +1,15 @@
-import { NextResponse, NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 
-// define and export the GET handler function
-
-export async function GET(request: Request) {
-  // this is going to be my JSON response
-
+// Define and export the GET handler function
+export async function GET() {
+  // This is going to be your JSON response
   const results = {
     message: 'Hello World!',
   }
 
-  // response with the JSON object
-console.log(results)
+  // Log the results to the console
+  console.log(results)
+
+  // Return the JSON response
   return NextResponse.json(results)
 }
