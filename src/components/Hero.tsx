@@ -42,9 +42,9 @@ export default async function Hero() {
           <Button size="lg">
             <Play className="mr-2 h-5 w-5" /> Play
           </Button>
-          <Button variant="outline" size="lg">
-            <Info className="mr-2 h-5 w-5" /> More Info
-          </Button>
+          <Button variant="outline" size="lg" className="text-gray-500">
+  <Info className="mr-2 h-5 w-5" /> More Info
+</Button>
         </div>
       </div>
     </div>
