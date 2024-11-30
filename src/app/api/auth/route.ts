@@ -35,6 +35,7 @@ export async function POST(request: Request) {
     // Cast the rows to User[] since they match the User interface
     const user: User = rows[0] as User
     const { Password, ...userWithoutPassword } = user
+    console.log(`User's password: ${Password}`) // Just an example of using it
 
     return NextResponse.json(userWithoutPassword)
   } catch (err) {
