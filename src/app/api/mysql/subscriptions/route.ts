@@ -9,16 +9,29 @@ const connectionParams = {
   database: 'MovieStreamingDB'
 }
 
+interface Subscription {
+  SubscriptionID: number;
+  SubscriptionType: string;
+  Price: number;
+  BillingCycle: string;
+  Features: string;
+}
+
 export async function GET() {
   try {
     const connection = await mysql.createConnection(connectionParams)
 
-    const query = 'SELECT * FROM Movies'
-    const [results] = await connection.execute(query)
+    const query = 'SELECT * FROM Subscription'
+    const [rows] = await connection.execute<mysql.RowDataPacket[]>(query)
 
     await connection.end()
 
-    return NextResponse.json(results)
+    const subscriptions = rows.map(row => ({
+      ...row,
+      Features: row.Features ? row.Features.split(',').map((feature: string) => feature.trim()) : []
+    })) as Subscription[]
+
+    return NextResponse.json(subscriptions)
   } catch (err) {
     console.error('ERROR: API - ', (err as Error).message)
 

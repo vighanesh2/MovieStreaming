@@ -9,20 +9,35 @@ const connectionParams = {
   database: 'MovieStreamingDB'
 }
 
+interface Movie {
+  MovieID: number;
+  Title: string;
+  Genre: string;
+  ReleaseDate: string;
+  Rating: number;
+  Description: string;
+  Duration: number;
+}
+
 export async function GET() {
   try {
     const connection = await mysql.createConnection(connectionParams)
 
-    const query = 'SELECT * FROM Movies'
-    const [results] = await connection.execute(query)
+    const query = 'SELECT * FROM Movies ORDER BY RAND() LIMIT 1'
+    const [rows] = await connection.execute<mysql.RowDataPacket[]>(query)
 
     await connection.end()
 
-    return NextResponse.json(results)
+    if (rows.length === 0) {
+      return NextResponse.json({ error: 'No movies found' }, { status: 404 })
+    }
+
+    const movie = rows[0] as Movie
+
+    return NextResponse.json(movie)
   } catch (err) {
     console.error('ERROR: API - ', (err as Error).message)
 
     return NextResponse.json({ error: (err as Error).message }, { status: 500 })
   }
 }
-
