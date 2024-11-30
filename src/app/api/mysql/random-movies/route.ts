@@ -33,7 +33,7 @@ export async function GET() {
     }
 
     const movie = rows[0] as Movie
-
+console.log(movie)
     return NextResponse.json(movie)
   } catch (err) {
     console.error('ERROR: API - ', (err as Error).message)

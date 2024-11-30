@@ -13,9 +13,8 @@ export async function GET() {
   try {
     const connection = await mysql.createConnection(connectionParams)
 
-    const query = 'SELECT * FROM Movies'
+    const query = 'SELECT * FROM movies'
     const [results] = await connection.execute(query)
-
     await connection.end()
 
     return NextResponse.json(results)
