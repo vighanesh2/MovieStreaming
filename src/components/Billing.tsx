@@ -1,4 +1,3 @@
-'use client'
 import { useState, useEffect } from 'react'
 
 interface BillingEntry {
@@ -8,10 +7,18 @@ interface BillingEntry {
   PaymentStatus: string
 }
 
+// Define the User interface based on your expected user structure
+interface User {
+  UserID: number
+  Name: string
+  Email: string
+  SubscriptionID: number
+}
+
 export default function Billing() {
   const [billingData, setBillingData] = useState<BillingEntry[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [user, setUser] = useState<any | null>(null)
+  const [user, setUser] = useState<User | null>(null) // Replace `any` with the User type
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
