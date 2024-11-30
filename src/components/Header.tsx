@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -14,14 +13,23 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
+// Define a User interface based on the properties you expect in the user object
+interface User {
+  UserID: number
+  Name: string
+  Email: string
+  SubscriptionID: number
+}
+
 export default function Header() {
-  const [user, setUser] = useState<any>(null)
+  // Replace `any` with the `User` interface
+  const [user, setUser] = useState<User | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
-      setUser(JSON.parse(storedUser))
+      setUser(JSON.parse(storedUser)) // Set user from localStorage
     }
   }, [])
 
@@ -29,15 +37,12 @@ export default function Header() {
     localStorage.removeItem('user')
     setUser(null)
     window.location.reload() // Refresh the page after login
-
-
   }
 
   const handleLoginSuccess = () => {
     setUser(JSON.parse(localStorage.getItem('user') || '{}'))
     setIsDialogOpen(false) // Close the dialog
     window.location.reload() // Refresh the page after login
-
   }
 
   return (
