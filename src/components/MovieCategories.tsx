@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -16,24 +15,33 @@ interface Movie {
   Duration: number
 }
 
+// Define a User interface based on the structure of the user object
+interface User {
+  UserID: number
+  Name: string
+  Email: string
+  SubscriptionID: number
+}
+
 async function getMovies(): Promise<Movie[]> {
-    const res = await fetch('/api/mysql/movies', { cache: 'no-store' })
-    if (!res.ok) {
+  const res = await fetch('/api/mysql/movies', { cache: 'no-store' })
+  if (!res.ok) {
     throw new Error('Failed to fetch movies')
   }
   return res.json()
 }
 
 export default function MovieCategories() {
+  // Use the User interface instead of any
   const [movies, setMovies] = useState<Movie[]>([])
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
-      setUser(JSON.parse(storedUser))
+      setUser(JSON.parse(storedUser)) // Set user from localStorage
     }
     async function fetchMovies() {
       const moviesData = await getMovies()
