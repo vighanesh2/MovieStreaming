@@ -59,15 +59,11 @@ export default function Header() {
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-gray-300">
+              <Link href="/movies" className="hover:text-gray-300">
                 Movies
               </Link>
             </li>
-            <li>
-              <Link href="#" className="hover:text-gray-300">
-                TV Shows
-              </Link>
-            </li>
+            
             <li>
               <Link href="#" className="hover:text-gray-300">
                 My List
@@ -105,3 +101,4 @@ export default function Header() {
     </header>
   )
 }
+

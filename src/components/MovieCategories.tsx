@@ -15,12 +15,26 @@ interface Movie {
   Duration: number
 }
 
-// Define a User interface based on the structure of the user object
+interface TMDBMovie {
+  id: number
+  title: string
+  poster_path: string
+  backdrop_path: string
+  videos: {
+    type: string
+    key: string
+  }[]
+}
+
 interface User {
   UserID: number
   Name: string
   Email: string
   SubscriptionID: number
+}
+
+interface MovieWithTMDB extends Movie {
+  tmdbData: TMDBMovie | null
 }
 
 async function getMovies(): Promise<Movie[]> {
@@ -31,36 +45,50 @@ async function getMovies(): Promise<Movie[]> {
   return res.json()
 }
 
+async function getTMDBData(title: string): Promise<TMDBMovie> {
+  const res = await fetch(`/api/tmdb?title=${encodeURIComponent(title)}`)
+  if (!res.ok) {
+    throw new Error('Failed to fetch TMDB data')
+  }
+  return res.json()
+}
+
 export default function MovieCategories() {
-  // Use the User interface instead of any
-  const [movies, setMovies] = useState<Movie[]>([])
+  const [movies, setMovies] = useState<MovieWithTMDB[]>([])
   const [user, setUser] = useState<User | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
+  const [selectedMovie, setSelectedMovie] = useState<MovieWithTMDB | null>(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
-      setUser(JSON.parse(storedUser)) // Set user from localStorage
+      setUser(JSON.parse(storedUser))
     }
-    async function fetchMovies() {
+    async function fetchMoviesAndTMDBData() {
       const moviesData = await getMovies()
-      setMovies(moviesData)
+      const moviesWithTMDB = await Promise.all(
+        moviesData.map(async (movie) => {
+          try {
+            const tmdbData = await getTMDBData(movie.Title)
+            return { ...movie, tmdbData }
+          } catch (error) {
+            console.error(`Error fetching TMDB data for ${movie.Title}:`, error)
+            return { ...movie, tmdbData: null }
+          }
+        })
+      )
+      setMovies(moviesWithTMDB)
     }
-    fetchMovies()
+    fetchMoviesAndTMDBData()
   }, [])
 
-  const handleMovieClick = (movie: Movie) => {
-    if (!user) {
-      setIsDialogOpen(true)  // Show sign-in dialog if not signed in
-    } else {
-      setSelectedMovie(movie)  // Show movie details if signed in
-    }
+  const handleMovieClick = (movie: MovieWithTMDB) => {
+    setSelectedMovie(movie)
   }
 
   const handleLoginSuccess = () => {
     setUser(JSON.parse(localStorage.getItem('user') || '{}'))
-    setIsDialogOpen(false)  // Close the dialog
+    setIsDialogOpen(false)
   }
 
   const categories = movies.reduce((acc, movie) => {
@@ -69,7 +97,7 @@ export default function MovieCategories() {
     }
     acc[movie.Genre].push(movie)
     return acc
-  }, {} as Record<string, Movie[]>)
+  }, {} as Record<string, MovieWithTMDB[]>)
 
   return (
     <section className="container mx-auto py-16">
@@ -80,11 +108,13 @@ export default function MovieCategories() {
             {movies.map((movie) => (
               <div
                 key={movie.MovieID}
-                className="flex-shrink-0"
+                className="flex-shrink-0 cursor-pointer"
                 onClick={() => handleMovieClick(movie)}
               >
                 <Image
-                  src="/placeholder.svg?height=400&width=300"
+                  src={movie.tmdbData?.poster_path 
+                    ? `https://image.tmdb.org/t/p/w200${movie.tmdbData.poster_path}`
+                    : "/placeholder.svg?height=300&width=200"}
                   alt={movie.Title}
                   width={200}
                   height={300}
@@ -106,7 +136,7 @@ export default function MovieCategories() {
           <DialogHeader>
             <DialogTitle>Sign In</DialogTitle>
             <DialogDescription>
-              You need to sign in to view the movie details.
+              Sign in to access additional features.
             </DialogDescription>
           </DialogHeader>
           <SignInForm onLoginSuccess={handleLoginSuccess} />
@@ -114,15 +144,47 @@ export default function MovieCategories() {
       </Dialog>
 
       {/* Movie Details Popup */}
-      {selectedMovie && user && (
+      {selectedMovie && (
         <Dialog open={Boolean(selectedMovie)} onOpenChange={() => setSelectedMovie(null)}>
-          <DialogContent>
+          <DialogContent className="max-w-3xl">
             <DialogHeader>
               <DialogTitle>{selectedMovie.Title}</DialogTitle>
               <DialogDescription>
-                <p>{selectedMovie.Description}</p>
+                <div className="mt-4">
+                  <Image
+                    src={selectedMovie.tmdbData?.backdrop_path
+                      ? `https://image.tmdb.org/t/p/w500${selectedMovie.tmdbData.backdrop_path}`
+                      : "/placeholder.svg?height=281&width=500"}
+                    alt={selectedMovie.Title}
+                    width={500}
+                    height={281}
+                    className="rounded-md"
+                  />
+                </div>
+                <p className="mt-4">{selectedMovie.Description}</p>
                 <p>Duration: {selectedMovie.Duration} min</p>
                 <p>Rating: {selectedMovie.Rating}/10</p>
+                {selectedMovie.tmdbData?.videos && selectedMovie.tmdbData.videos.length > 0 && (                  <div className="mt-4">
+                    <h3 className="text-lg font-semibold mb-2">Trailer</h3>
+                    <iframe
+                      width="100%"
+                      height="315"
+                      src={`https://www.youtube.com/embed/${selectedMovie.tmdbData.videos[0].key}`}
+                      title={`${selectedMovie.Title} Trailer`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                )}
+                {!user && (
+                  <div className="mt-4">
+                    <p>Sign in to access more features!</p>
+                    <Button onClick={() => setIsDialogOpen(true)} className="mt-2">
+                      Sign In
+                    </Button>
+                  </div>
+                )}
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
@@ -131,3 +193,4 @@ export default function MovieCategories() {
     </section>
   )
 }
+
