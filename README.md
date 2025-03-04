@@ -1,37 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MovieStreaming
+
+A modern movie streaming platform built with Next.js, featuring a dynamic movie catalog with trailers, subscription plans, and user recommendations.
+
+## Features
+
+- **Movie Catalog:** Browse movies by genre with poster images and details
+- **TMDB Integration:** Fetch movie posters, backdrop images, and trailers automatically
+- **Movie Details:** View movie descriptions, ratings, duration, and watch trailers
+- **Subscription Plans:** Multiple subscription tiers with different features and pricing
+- **User Authentication:** Sign-in functionality for personalized experience
+- **Responsive Design:** Works seamlessly across desktop and mobile devices
+
+## Tech Stack
+
+- **Frontend:** Next.js, React, Tailwind CSS
+- **Backend:** Next.js API Routes
+- **Database:** MySQL
+- **External API:** TMDB (The Movie Database)
+- **UI Components:** Shadcn UI
+
+## Project Structure
+
+```
+/app                 # Next.js app router
+/components          # UI components 
+/api                 # API routes
+  /mysql             # MySQL database endpoints
+    /movies.ts       # Movie endpoints
+    /subscriptions.ts# Subscription endpoints
+    /recommendations.ts # Recommendation endpoints
+  /tmdb.ts           # TMDB API integration
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 16.8.0 or later
+- MySQL server
+- TMDB API key
+
+### Environment Setup
+
+1. Create a `.env.local` file in the root directory with the following variables:
+
+```
+TMDB_API_KEY=your_tmdb_api_key
+```
+
+2. Update the MySQL connection parameters in the API files if needed.
+
+### Database Setup
+
+1. Create a MySQL database named `MovieStreamingDB`
+2. Set up the following tables:
+   - Movies
+   - Subscription
+   - Users
+   - Recommendation
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/MovieStreaming.git
+
+# Navigate to the project directory
+cd MovieStreaming
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Screenshots
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+![Movie Catalog](https://via.placeholder.com/800x400?text=Movie+Catalog)
+![Movie Details](https://via.placeholder.com/800x400?text=Movie+Details)
+![Subscription Plans](https://via.placeholder.com/800x400?text=Subscription+Plans)
 
-## Learn More
+## Future Enhancements
 
-To learn more about Next.js, take a look at the following resources:
+- Add watchlist functionality
+- Implement search feature
+- Add user ratings and reviews
+- Enhanced recommendation algorithm
+- Payment integration for subscriptions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# MovieStreaming
+This project is licensed under the MIT License - see the LICENSE file for details.
