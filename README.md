@@ -62,12 +62,6 @@ TMDB_API_KEY=your_tmdb_api_key
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Screenshots
-
-![Movie Catalog](https://via.placeholder.com/800x400?text=Movie+Catalog)
-![Movie Details](https://via.placeholder.com/800x400?text=Movie+Details)
-![Subscription Plans](https://via.placeholder.com/800x400?text=Subscription+Plans)
-
 ## Future Enhancements
 
 - Add watchlist functionality
