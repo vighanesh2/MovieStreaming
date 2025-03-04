@@ -59,21 +59,6 @@ TMDB_API_KEY=your_tmdb_api_key
    - Users
    - Recommendation
 
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/MovieStreaming.git
-
-# Navigate to the project directory
-cd MovieStreaming
-
-# Install dependencies
-npm install
-
-# Run the development server
-npm run dev
-```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
